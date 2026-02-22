@@ -1,77 +1,64 @@
 package com.example.greets
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
-    // Declare UI elements
+    private val TAG = "GreetsGame"
     private lateinit var etName: EditText
-    private lateinit var btnDisplay: Button
-    private lateinit var btnClear: Button
-    private lateinit var tvGreeting: TextView
+    private lateinit var btnDropBlob: Button
+    private lateinit var btnClearBlobs: Button
+    private lateinit var blobGameView: BlobGameView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d(TAG, "onCreate called")
 
-        // Initialize UI elements
         initializeViews()
-
-        // Set up button click listeners
         setupClickListeners()
     }
 
     private fun initializeViews() {
         etName = findViewById(R.id.etName)
-        btnDisplay = findViewById(R.id.btnDisplay)
-        btnClear = findViewById(R.id.btnClear)
-        tvGreeting = findViewById(R.id.tvGreeting)
+        btnDropBlob = findViewById(R.id.btnDropBlob)
+        btnClearBlobs = findViewById(R.id.btnClearBlobs)
+        blobGameView = findViewById(R.id.blobGameView)
+        Log.d(TAG, "Views initialized, gameView width: ${blobGameView.width}, height: ${blobGameView.height}")
     }
 
     private fun setupClickListeners() {
-        // Display button - shows greeting with user's name
-        btnDisplay.setOnClickListener {
-            displayGreeting()
+        btnDropBlob.setOnClickListener {
+            Log.d(TAG, "Drop blob clicked")
+            dropBlob()
         }
 
-        // Clear button - clears input and greeting
-        btnClear.setOnClickListener {
-            clearFields()
+        btnClearBlobs.setOnClickListener {
+            Log.d(TAG, "Clear clicked")
+            blobGameView.clearBlobs()
+            etName.text.clear()
+            etName.requestFocus()
+            Toast.makeText(this, "All blobs cleared!", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun displayGreeting() {
+    private fun dropBlob() {
         val name = etName.text.toString().trim()
+        Log.d(TAG, "Name entered: '$name'")
 
-        // Validate input
         if (name.isEmpty()) {
-            Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please enter a name first!", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Display personalized greeting
-        val greeting = "Hello, $name! 👋\nWelcome to Greets!"
-        tvGreeting.text = greeting
-        tvGreeting.visibility = TextView.VISIBLE
-    }
-
-    private fun clearFields() {
-        // Clear the EditText
+        blobGameView.addBlob(name)
         etName.text.clear()
-
-        // Hide the greeting TextView
-        tvGreeting.text = ""
-        tvGreeting.visibility = TextView.INVISIBLE
-
-        // Optional: Show confirmation toast
-        Toast.makeText(this, "Fields cleared", Toast.LENGTH_SHORT).show()
-
-        // Return focus to EditText for next user
         etName.requestFocus()
+        Toast.makeText(this, "Blob $name dropped!", Toast.LENGTH_SHORT).show()
     }
 }
