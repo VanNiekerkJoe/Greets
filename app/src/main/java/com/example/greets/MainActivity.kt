@@ -1,6 +1,5 @@
 package com.example.greets
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
@@ -36,6 +35,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         "Howdy, %s! 🤠",
         "Sup %s! Ready to roll? 🚀",
         "Ahoy %s! Welcome aboard! ⚓"
+    )
+
+    private val explosionMessages = listOf(
+        "💥 BOOM! %s exploded!",
+        "🎆 %s went POP!",
+        "💣 %s is gone!",
+        "✨ %s disappeared in a flash!",
+        "🌟 %s became stardust!"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,21 +95,31 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             return
         }
 
-        // Add blob to game
         blobGameView.addBlob(name)
-
-        // Show greeting
         showGreeting(name)
-
-        // Speak greeting
         speakGreeting(name)
 
-        // Clear input
         etName.text.clear()
         etName.requestFocus()
 
-        // Success feedback
-        Toast.makeText(this, "🎉 $name joined the party!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "🎉 $name joined! Drag to throw, spam-click to explode!", Toast.LENGTH_LONG).show()
+    }
+
+    fun onBlobExploded(name: String) {
+        val message = explosionMessages.random().format(name)
+        tvGreeting.text = message
+        tvGreeting.visibility = View.VISIBLE
+
+        val bounce = AnimationUtils.loadAnimation(this, R.anim.bounce)
+        tvGreeting.startAnimation(bounce)
+
+        if (ttsReady) {
+            textToSpeech.speak("$name exploded!", TextToSpeech.QUEUE_FLUSH, null, null)
+        }
+
+        tvGreeting.postDelayed({
+            tvGreeting.visibility = View.INVISIBLE
+        }, 2000)
     }
 
     private fun showGreeting(name: String) {
@@ -110,11 +127,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         tvGreeting.text = greeting
         tvGreeting.visibility = View.VISIBLE
 
-        // Animate greeting
         val slideIn = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left)
         tvGreeting.startAnimation(slideIn)
 
-        // Hide after 3 seconds
         tvGreeting.postDelayed({
             val fadeOut = AnimationUtils.loadAnimation(this, android.R.anim.fade_out)
             tvGreeting.startAnimation(fadeOut)
@@ -124,8 +139,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun speakGreeting(name: String) {
         if (ttsReady) {
-            val message = "Welcome, $name!"
-            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null)
+            textToSpeech.speak("Welcome, $name!", TextToSpeech.QUEUE_FLUSH, null, null)
         }
     }
 
@@ -138,19 +152,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             return
         }
 
-        // Show group greeting
         val namesList = blobNames.joinToString(", ")
         tvGreeting.text = "👋 Hello everyone: $namesList!"
         tvGreeting.visibility = View.VISIBLE
 
-        // Animate
         val bounce = AnimationUtils.loadAnimation(this, R.anim.bounce)
         tvGreeting.startAnimation(bounce)
 
-        // Speak all names
         if (ttsReady) {
-            val message = "Greetings to ${blobNames.joinToString(", ")}"
-            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null)
+            textToSpeech.speak("Greetings to $namesList", TextToSpeech.QUEUE_FLUSH, null, null)
         }
 
         Toast.makeText(this, "🎊 Greeting ${blobNames.size} blobs!", Toast.LENGTH_SHORT).show()
