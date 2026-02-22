@@ -5,16 +5,32 @@
     android:orientation="vertical"
     android:background="#1A1A2E">
 
+    <!-- Animated Title -->
     <TextView
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="🎮 Blob Run Game"
-        android:textSize="28sp"
+        android:textSize="32sp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
+        android:textColor="#4ECDC4"
         android:layout_gravity="center_horizontal"
         android:padding="16dp" />
 
+    <!-- Greeting Display -->
+    <TextView
+        android:id="@+id/tvGreeting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#FFEAA7"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:padding="8dp" />
+
+    <!-- Input Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,26 +54,49 @@
             android:id="@+id/btnDropBlob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DROP BLOB"
+            android:text="🎉 DROP BLOB"
             android:backgroundTint="#4ECDC4"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/btnGreetAll"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="👋 GREET ALL"
+            android:backgroundTint="#96CEB4"
+            android:textColor="#FFFFFF"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnClearBlobs"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="🗑️ CLEAR ALL"
+            android:backgroundTint="#FF6B6B"
+            android:textColor="#FFFFFF"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
+    <!-- Game Area -->
     <com.example.greets.BlobGameView
         android:id="@+id/blobGameView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#1A1A2E" />
-
-    <Button
-        android:id="@+id/btnClearBlobs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CLEAR ALL BLOBS"
-        android:backgroundTint="#FF6B6B"
-        android:textColor="#FFFFFF"
-        android:layout_margin="16dp" />
 
 </LinearLayout>
